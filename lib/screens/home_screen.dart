@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final skey = GlobalKey<ScaffoldState>();
+  final skey = GlobalKey<ScaffoldState>(); //, _listController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
         Widget b;
         if (snap.data == null)
           b = Center(child: Text('Loading...'));
-        else
+        else {
           b = snap.data.isEmpty
               ? Center(
                   child: Text('No Transactions Yet!'),
@@ -42,12 +42,18 @@ class _HomeScreenState extends State<HomeScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Text('Balance'),
-                          Text(
-                            TransactionEntity.finalBalanceFormatted,
-                            style: TextStyle(
-                              fontSize: 30,
-                              color: TransactionEntity.finalBalance < 0 ? Colors.red[700] : Colors.indigo,
-                              fontWeight: FontWeight.bold,
+                          Center(
+                            child: FittedBox(
+                              child: Center(
+                                child: Text(
+                                  'Rs. ' + TransactionEntity.finalBalanceFormatted,
+                                  style: TextStyle(
+                                    fontSize: 30,
+                                    color: TransactionEntity.finalBalance < 0 ? Colors.red[700] : Colors.indigo,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
                         ],
@@ -90,11 +96,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             Expanded(
                               flex: 4,
                               child: Center(
-                                child: Text(
-                                  'Amount',
-                                  maxLines: 1,
-                                  style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18),
-                                  textAlign: TextAlign.right,
+                                child: FittedBox(
+                                  child: Center(
+                                    child: Text(
+                                      'Amount (Rs.)',
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -102,11 +112,15 @@ class _HomeScreenState extends State<HomeScreen> {
                             Expanded(
                               flex: 4,
                               child: Center(
-                                child: Text(
-                                  'Balance',
-                                  maxLines: 1,
-                                  style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18),
-                                  textAlign: TextAlign.right,
+                                child: FittedBox(
+                                  child: Center(
+                                    child: Text(
+                                      'Balance (Rs.)',
+                                      maxLines: 1,
+                                      style: TextStyle(color: Colors.indigo, fontWeight: FontWeight.bold, fontSize: 18),
+                                      textAlign: TextAlign.right,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -117,6 +131,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     Divider(height: 0, thickness: 1),
                     Expanded(
                       child: ListView.separated(
+                        // controller: _listController,
                         itemCount: snap.data.length,
                         itemBuilder: (_, idx) => TransactionWidget(snap.data[idx], idx, () => setState(() {})),
                         separatorBuilder: (_, __) => Divider(height: 0, thickness: 1),
@@ -124,6 +139,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ],
                 );
+        }
         return Scaffold(
           key: skey,
           appBar: AppBar(
@@ -176,7 +192,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           context: context,
                           builder: (c) => AlertDialog(
                             title: Center(child: Text('Are You Sure?')),
-                            content: Text('Do you want to delete this transaction?'),
+                            content: Text('Do you want to delete all transactions?'),
                             actions: [
                               TextButton(
                                 onPressed: () async {
@@ -257,6 +273,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ],
           ),
           body: b,
+          // floatingActionButton: snap.hasData && _listController.offset == _listController.position.maxScrollExtent
+          //     ? null
+          //     : FloatingActionButton(
+          //         mini: true,
+          //         child: Icon(Icons.arrow_downward),
+          //         onPressed: () {},
+          //       ),
         );
       },
     );

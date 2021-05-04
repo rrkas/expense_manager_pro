@@ -8,7 +8,7 @@ void main() {
   runApp(MyApp());
 }
 
-String get version => '1.0.0';
+String get version => '1.1.0';
 
 class MyApp extends StatelessWidget {
   @override
